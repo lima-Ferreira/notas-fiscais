@@ -30,6 +30,33 @@ header {
     text-align: center;
 }
 
+/* Container centralizado */
+.filtro-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* Input bonito */
+#filtroInput {
+    width: 400px;
+    max-width: 90%;
+    padding: 10px 15px;
+    font-size: 14px;
+
+    border: 1px solid #ccc;
+    border-radius: 8px;
+
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+/* Efeito ao clicar */
+#filtroInput:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
 header h1 {
     margin: 0 auto;
 }
