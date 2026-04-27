@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <title>Resultado da Comparação</title>
     <link rel="stylesheet" href="css/style.css" />
 </head>
@@ -20,18 +21,26 @@
 
     <main class="main">
         <section class="results" style="width: 100%;">
+
+            <!-- 🔍 FILTRO -->
+            <div style="margin-bottom: 15px;">
+                <input type="text" id="filtroInput"
+                    placeholder="Buscar por número da nota ou fornecedor..."
+                    style="width: 300px; padding: 8px;">
+            </div>
+
             <div id="results-container"></div>
         </section>
     </main>
 
     <script>
-        const backendUrl = "https://nfecontrole-backend.onrender.com"; // URL do backend
+        const backendUrl = "https://nfecontrole-backend.onrender.com";
         const chavesFaltando = JSON.parse(localStorage.getItem("chavesFaltando") || "[]");
         const resultsContainer = document.getElementById("results-container");
         const downloadContainer = document.getElementById("download-link-container");
 
         if (chavesFaltando.length > 0) {
-            // Monta a tabela de resultados
+
             let tableHTML = `<table class="table"><thead>
                 <tr>
                     <th>Data</th>
@@ -46,6 +55,7 @@
 
             chavesFaltando.forEach(item => {
                 const cancelado = item.autorizacao?.toLowerCase() === "cancelado";
+
                 tableHTML += `<tr class="${cancelado ? "linha-cancelada" : ""}">
                     <td>${item.dataTempo || ""}</td>
                     <td>${item.uf || ""}</td>
@@ -60,7 +70,26 @@
             tableHTML += `</tbody></table>`;
             resultsContainer.innerHTML = tableHTML;
 
-            // Botão de download via POST
+            // 🔍 FILTRO FUNCIONANDO
+            const filtroInput = document.getElementById("filtroInput");
+
+            filtroInput.addEventListener("keyup", function () {
+                const filtro = this.value.toLowerCase();
+                const linhas = document.querySelectorAll("table tbody tr");
+
+                linhas.forEach(linha => {
+                    const numeroNota = linha.children[2].innerText.toLowerCase();
+                    const fornecedor = linha.children[4].innerText.toLowerCase();
+
+                    if (numeroNota.includes(filtro) || fornecedor.includes(filtro)) {
+                        linha.style.display = "";
+                    } else {
+                        linha.style.display = "none";
+                    }
+                });
+            });
+
+            // 📥 DOWNLOAD EXCEL
             const downloadBtn = document.createElement("button");
             downloadBtn.classList.add("download-link");
             downloadBtn.innerHTML = `<i class="fas fa-download"></i> Baixar Excel`;
